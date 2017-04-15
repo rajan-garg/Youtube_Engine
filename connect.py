@@ -13,11 +13,16 @@ app.config['MONGO_URI'] = 'mongodb://localhost:27017/mydb'
 
 mongo = PyMongo(app)
 
+@app.route('/video/<vidID>')
+def show(vidID):
+	star = mongo.db.mycol
+	a = star.find_one({'videoInfo.id':vidID})
+	return render_template('index.html', videoid = a)
 
 @app.route('/success/<query>')
 def success(query):
 	star = mongo.db.mycol
-	a = star.find( { '$text': { '$search': query } }, { 'score': {'$meta': "textScore"}}).limit(5)
+	a = star.find( { '$text': { '$search': query } }, { 'score': {'$meta': "textScore"}}).limit(10)
 	return render_template('index.html', name = a , q=query)
 
 @app.route('/index',methods = ['POST', 'GET'])
