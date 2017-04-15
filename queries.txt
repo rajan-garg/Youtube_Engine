@@ -1,0 +1,5 @@
+
+db.mycol.ensureIndex({"videoInfo.snippet.title":'text',"videoInfo.snippet.localized.description":'text',"videoInfo.snippet.tags":'text',"videoInfo.snippet.channelTitle":'text'},{weights:{"videoInfo.snippet.title":1,"videoInfo.snippet.localized.description":1,"videoInfo.snippet.tags":1,"videoInfo.snippet.channelTitle":1}})
+
+
+db.mycol.find({ $text: { $search: "salman khan" } },{ score: { $meta: "textScore" } }).sort( { score: { $meta: "textScore" } } ).pretty().limit(10)

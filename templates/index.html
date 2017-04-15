@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+   <body>
+
+      <form action = "http://localhost:5000/index" method = "post">
+         <p>Enter Query:</p>
+         <p><input type = "text" name = "nm" /></p>
+         <p><input type = "submit" value = "submit" /></p>
+      </form>
+   
+      <ul>
+      {% if name %}
+      	{% for obj in name %}
+
+			   <img src= {{obj.videoInfo.snippet.thumbnails.default.url}} style="width:120px;height:90px;">
+               <li><a href=http://localhost:5000/video/{{obj.videoInfo.id}}> {{ obj.videoInfo.snippet.title }} </a></li>
+            
+         {% endfor %}
+      {%endif%}
+      </ul>
+      
+   </body>
+</html>
