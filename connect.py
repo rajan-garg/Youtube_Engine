@@ -17,7 +17,7 @@ mongo = PyMongo(app)
 @app.route('/success/<query>')
 def success(query):
 	star = mongo.db.mycol
-	a = star.find( { '$text': { '$search': query } }, { 'score': {'$meta': "textScore"}})
+	a = star.find( { '$text': { '$search': query } }, { 'score': {'$meta': "textScore"}}).limit(5)
 	return render_template('index.html', name = a , q=query)
 
 @app.route('/index',methods = ['POST', 'GET'])
