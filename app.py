@@ -1,0 +1,140 @@
+# import the Flask class from the flask module
+from flask import Flask, session, render_template, redirect, url_for, request
+from flaskext.mysql import MySQL
+from flask_session import Session
+import MySQLdb
+from flask_pymongo import PyMongo
+import json
+from py2neo import Graph, authenticate
+
+app = Flask(__name__)
+
+app.config['MONGO_DBNAME'] = 'mydb'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/mydb'
+
+authenticate("localhost:7474", "neo4j", "ronalpha")
+graph = Graph();
+
+mongo = PyMongo(app)
+
+
+mysql = MySQL()
+
+acc= ''
+
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'ronalpha'
+app.config['MYSQL_DATABASE_DB'] = 'youtube'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+mysql.init_app(app)
+
+@app.route('/video/<vidID>')
+def video(vidID):
+	star = mongo.db.mycol
+	a = star.find_one({'videoInfo.id':vidID})
+	b=graph.run("match(n:Youtube)-[r:`SAME_CHANNEL`]-(n2) where n.name= {n} return n2 limit 10",n = vidID)
+	out=[]
+	global acc
+	for i in b:
+		out.append(star.find_one({'videoInfo.id':i['n2']['name']}))
+
+	if acc=='':
+		return render_template('index.html',name=out , videoid = a)
+	else:
+		return render_template('welcome.html',username=acc,name=out , videoid = a)
+
+@app.route('/success/<query>')
+def success(query):
+	global acc
+	star = mongo.db.mycol
+	a = star.find( { '$text': { '$search': query } }, { 'score': {'$meta': "textScore"}}).limit(10)
+	if acc=='':
+		return render_template('index.html',name = a)
+	else:
+		return render_template('welcome.html',username=acc,name = a)
+
+@app.route('/search',methods = ['POST', 'GET'])
+def search():
+	user="hello"
+	if request.method=="POST":
+		user = request.form['nm']
+	global acc
+	#if acc=='':
+	return redirect(url_for('success',query = user))
+	#else:
+	#	return redirect(url_for('welcome'))
+
+
+@app.route('/home')
+def home():
+	
+	if 'username' in session:
+		global acc
+		username = session['username']
+		acc = username
+		print acc
+		return redirect(url_for('welcome'))
+	else:
+		return render_template('index.html')
+
+@app.route('/welcome')
+def welcome():
+	global acc
+	#return acc
+	return  render_template('welcome.html',username=acc)
+
+
+@app.route('/auth', methods=['GET', 'POST'])
+def auth():
+	if request.method == 'POST':
+		u = request.form['username']
+		p = request.form['password']
+
+	global acc
+	acc = u
+
+	session['username'] = u
+
+	cursor = mysql.connect().cursor()
+	cursor.execute("SELECT * FROM credentials WHERE userid='" + u + "' AND pass='" + p + "';")
+	data = cursor.fetchone()
+	if data is None:
+		return render_template('index.html')
+	else:
+		return redirect(url_for('welcome'))
+
+@app.route('/register', methods=['GET', 'POST'])
+def reg():
+	if request.method == 'POST':
+		u = request.form['username']
+		p = request.form['password']
+
+	conn=MySQLdb.connect(host="localhost", user="root", passwd="ronalpha", db="youtube")
+	cursor=conn.cursor()
+
+	global acc
+	acc=u
+
+	session['username'] = u
+	query = "INSERT INTO credentials(userid,pass) VALUES (%s,%s)"
+	args = (u,p)
+
+	cursor.execute(query,args)
+
+	conn.commit()
+	cursor.close()
+	conn.close()
+	return redirect(url_for('welcome'))
+
+@app.route('/logout')
+def logout():
+	global acc
+	acc= ''
+
+	session.pop('username', None)
+	return redirect(url_for('home'))
+
+
+if __name__ == '__main__':
+	app.secret_key = 'qwerty'
+	app.run(debug=True)
