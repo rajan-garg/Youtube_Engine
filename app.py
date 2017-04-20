@@ -1,5 +1,5 @@
 # import the Flask class from the flask module
-from flask import Flask, session, render_template, redirect, url_for, request
+from flask import Flask, session, render_template, redirect, url_for, request,  Response
 from flaskext.mysql import MySQL
 from flask_session import Session
 import MySQLdb
@@ -32,9 +32,35 @@ mysql.init_app(app)
 def video(vidID):
 	star = mongo.db.mycol
 	a = star.find_one({'videoInfo.id':vidID})
-	b=graph.run("match(n:Youtube)-[r:`SAME_CHANNEL`]-(n2) where n.name= {n} return n2 limit 10",n = vidID)
+	b=graph.run("match(n:Youtube)-[r]-(n2) where n.name= {n} return n2 order by r.weight desc limit 10",n = vidID)
 	out=[]
 	global acc
+	if acc!='':
+		cursor = mysql.connect().cursor()
+		cursor.execute('SELECT * FROM vids WHERE user="' + acc + '" AND videoid="' + vidID + '";')
+		data = cursor.fetchone()
+		conn=MySQLdb.connect(host="localhost", user="root", passwd="ronalpha", db="youtube")
+		cursor=conn.cursor()
+		# query1 = 'SELECT * FROM vids WHERE user=="' + acc + '" AND videoid=="' +vidID + '"'
+		# data = cursor.execute(query1)
+		print data
+		print "Yolo"
+		if data:
+			print data[1]
+			c = int(data[2]) + 1
+			print c
+			query2 = 'UPDATE vids SET count="' + str(c) + '"' + 'WHERE user="' + acc + '" AND ' + 'videoid="' + vidID + '"'
+			cursor.execute(query2)
+			conn.commit()
+			cursor.close()
+			conn.close()
+		else:
+			query = 'INSERT INTO vids(user,videoid,count) VALUES (' + ' "' + acc + '" ,"'+ vidID + '",' + str(1) + ')'
+			cursor.execute(query)
+			conn.commit()
+			cursor.close()
+			conn.close()
+
 	for i in b:
 		out.append(star.find_one({'videoInfo.id':i['n2']['name']}))
 
@@ -43,9 +69,28 @@ def video(vidID):
 	else:
 		return render_template('welcome.html',username=acc,name=out , videoid = a)
 
+@app.route('/clicks')
+def clicks():
+	global acc
+	print acc
+	if acc!='':
+		print "yoloyool"
+		cursor = mysql.connect().cursor()
+		cursor.execute('SELECT * FROM vids WHERE user="' + acc + '";')
+		data = cursor.fetchall()
+		print data[0][1]
+		out=[]
+		star = mongo.db.mycol
+		for i in data:
+			out.append(star.find_one({'videoInfo.id':i[1]}))
+		return render_template('welcome.html',username=acc,name=out)
+	return Response("Please login")
+
 @app.route('/success/<query>')
 def success(query):
 	global acc
+	print acc
+	print query
 	star = mongo.db.mycol
 	a = star.find( { '$text': { '$search': query } }, { 'score': {'$meta': "textScore"}}).limit(10)
 	if acc=='':

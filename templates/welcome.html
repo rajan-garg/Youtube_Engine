@@ -1,102 +1,330 @@
-<html>
-  <head>
-    
-    <meta charset = "utf-8">
-    <meta http-equiv="X-UA-compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>YouTube</title> 
 
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<!--Dependencies-->
-    <link href="../static/bootstrap/css/font-awesome.min.css"rel = "stylesheet">
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>YoYoTube</title>
+<link href="../static/web/css/bootstrap.css" rel='stylesheet' type='text/css' />
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<!-- Custom Theme files -->
+<link href="../static/web/css/style.css" rel='stylesheet' type='text/css' />
+<!-- Custom Theme files -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!--webfont-->
+<link href='//fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="../static/web/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../static/web/js/login.js"></script>
+<script src="../static/web/js/jquery.easydropdown.js"></script>
+<script src="../static/web/js/wow.min.js"></script>
+<link href="../static/web/css/animate.css" rel='stylesheet' type='text/css' />
+<!--Dependencies for modal maybe ???-->
+
+<link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="../static/bootstrap/css/font-awesome.min.css" rel = "stylesheet">
     <link href="../static/bootstrap/css/bootstrap.min.css" rel = "stylesheet">
     <link href="../static/css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="../static/bootstrap/css/bootstrap-social.css" rel="stylesheet">
-    <link href="css/mystyles.css" rel="stylesheet">
-    <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.css">
+    <link href="../css/mystyles.css" rel="stylesheet">
+    <link rel="../stylesheet" href="static/bootstrap/css/bootstrap.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <link rel="stylesheet" href="../static/AdminLTE/css/AdminLTE.min.css">
-  <link rel="stylesheet" href="../static/AdminLTE/css/skins/_all-skins.min.css">
+  <link rel="stylesheet" href="static/AdminLTE/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="static/AdminLTE/css/skins/_all-skins.min.css">
   <script src="../static/bootstrap/js/jquery.min.js"></script>
   <script src="../static/bootstrap/js/jquery-ui.js"></script>
   <script src="../static/bootstrap/js/bootstrap.js"></script>
 
-  </head>
+<style type="text/css">
+   #menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+   }
+   #menu li {
+  display: inline-block;
+   }
+</style>
 
-  <body>
+<script>
+	new WOW().init();
+</script>
+</head>
+<body>
+<div class="header">
+		   <div class="col-sm-8 header-left">
+                <div class="logo">
+                  <a href="index.html"><img src="../static/web/images/logo.png" alt=""/></a>
+                </div>
 
-     <nav class="navbar navbar-inverse navbar-fixed-top" role = "navigation">
-        <div class = "container">
-            <div class = "navbar-header">
-                <button type = "button" class = "navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class = "navbar-brand" href="index.html">Youtube</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav ">
-                    <li class="active"><a href="index.html"><span class = "glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>                    
-                </ul>
+            <h2 style="color:#E94E38">
+            <b><i>One place to find them all......</i></b>
+            <i class="fa fa-video-camera" aria-hidden="true"></i>
+            <i class="fa fa-microphone" aria-hidden="true"></i>
+            <i class="fa fa-camera" aria-hidden="true"></i>
+            </h2>
+				     
+                 <!--search-scripts-->
+						<script src="../static/web/js/classie.js"></script>
+						<script src="../static/web/js/uisearch.js"></script>
+						<script>
+							new UISearch( document.getElementById( 'sb-search' ) );
+						</script>
+						<!--//search-scripts-->						
+	    		    <div class="clearfix"></div>
+	    	    </div>
+	    	    <!--Logout Button-->
+	            <div class="col-sm-2 header_right">
+	    		      <div class="loginContainer"><a href="/logout" class="loginButton"><img src="../static/web/images/login.png"><span>Logout</span></a>
+						    
+			             </div> 
 
-                <ul class = "nav navbar-nav navbar-right">
-                   
-                    <li><a href="/logout">
-                        <span class="glyphicon glyphicon-log-in"></span>
-                        Logout</a>
+		                 <div class="clearfix"></div>
+	                 </div>
+	                 <!--Welcome sign-->
+	            <div class="col-sm-2 header_right">
+	    		       <div class="loginContainer"><a href="welcome.html" class="loginButton"><span>{{username}} !!!</span></a>
+						   
+			             </div>
+		                 <div class="clearfix"></div>
+	                 </div>
+	                <div class="clearfix"></div>
+                   </div>
+    
+      </div>
+
+   
+
+    <!--header ends here ^-->
+
+    <div class="banner">
+   	  <div class="container_wrap">
+   		<h1>What are you looking for?</h1>
+   	       
+
+		    <form action="http://localhost:5000/search" method="post">
+				<input type="text" name="nm" placeholder="waiting..." value="start typing here..." onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'start typing here...';}">
+			    <div class="contact_btn">
+	               <label class="btn1 btn-2 btn-2g">
+	              	<input name="submit" type="submit" id="submit" value="Find Videos !!!">
+	               </label>
+	            </div>
+			</form> 
+
+   		    <div class="clearfix"></div>
+         </div>
+    </div>
+    <div class="col-md-6 bottom_nav">
+            <div class="content_menu">
+            <ul>
+               <li class="active"><a href="#"><b>The results are : </b></a></li> 
+               
+            </ul>
+         </div>
+      </div>
+      
+
+             
+
+
+<!--Start editing here-->
+<div class="content_middle">
+        <div class="container">
+          <div class="content_middle_box">
+          <div class="top_grid">
+         {% if videoid %}
+         <img src= {{videoid.videoInfo.snippet.thumbnails.high.url}} style="width:1200px;height:600px;">
+         {%endif%}
+         </div>
+         </div>
+         </div>
+         </div>
+
+<!--Middle portion-->
+
+<!-- <div class="offering">
+   <h2 style="color:#E94E38">The results are : </h2>                 
+</div> -->
+
+   <div class="content_middle">
+   	  <div class="container" style="background-color: #E94E38">
+   	    <div class="content_middle_box" >
+          <div class="top_grid" >
+
+
+
+               {% if name %}
+               {% for obj in name %}
+               <div class="col-md-3">
+               <div class="grid1">
+                  <div class="view view-first">
+                  <div class="index_img2"><img src= {{obj.videoInfo.snippet.thumbnails.high.url}} class="img-responsive" alt=""  style="width:260px;height:180px;" /></div>
+                    <div class="mask">
+                        <div class="info"><i class="search"> </i>
+                           <a href="#" data-toggle="modal" data-target="#desc"> Show More</a>
+                        </div>
+                         <ul class="mask_img">
+                        </ul> 
+                      </div>
+                  </div> 
+               <div class="inner_wrap">
+                  <h3><a href=http://localhost:5000/video/{{obj.videoInfo.id}}> {{ obj.videoInfo.snippet.title }} </a></h3>
+                  <ul class="star1" id="menu">
+                    <h4 class="blue">Statistics</h4>
+                    <li>
+                    <i class="fa fa-thumbs-up" aria-hidden="true"></i>: {{ obj.videoInfo.statistics.likeCount }} 
+                     </li>
+                    <li>
+                  <i class="fa fa-thumbs-down" aria-hidden="true"></i>: {{ obj.videoInfo.statistics.dislikeCount }} 
                     </li>
-                </ul>
-
-                                <ul class = "nav navbar-nav navbar-right">
-                   
-                    <li><h4><font color="white">
-                        {{username}}
-                        </font>
-                        </h4>
+                    <li>
+                       <i class="fa fa-comment" aria-hidden="true"></i>: {{ obj.videoInfo.statistics.commentCount }}
                     </li>
-                </ul>
-            </div>        
-        </div>
-    </nav>  
+                    <li>
+                     <i class="fa fa-eye" aria-hidden="true"></i>: {{ obj.videoInfo.statistics.viewCount }}
+                    </li>
+                    <li>
+                     <i class="fa fa-star" aria-hidden="true"></i>: {{ obj.videoInfo.statistics.favoriteCount }}
+                    </li>
+                  </ul>
+                </div>
+               </div>
+               </div>
 
-   <div style="margin-top: 52px;">
-         <table width="100%" border="0">
-            <tr>
-               <td colspan="2" bgcolor="#b5dcb3" align="center">
-                  <form action = "http://localhost:5000/search" method = "post">
-                      <p>Enter Query:</p>
-                     <p><input type = "text" name = "nm" /></p>
-                      <p><input type = "submit" value = "submit" /></p>
-                   </form>
-              </td>
-            </tr>
-
-            <tr valign="top">
-                  <td><div style="width:100%; max-height:600px; overflow:auto">
-                      <ul>
-                        {% if name %}
-                        {% for obj in name %}
-
-                        <img src= {{obj.videoInfo.snippet.thumbnails.default.url}} style="width:120px;height:90px;">
-                        <li><a href=http://localhost:5000/video/{{obj.videoInfo.id}}> {{ obj.videoInfo.snippet.title }} </a></li>
+            <!--Modal body-->
+         <div id="desc" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">   
+                <div class="modal-header">
+                    <h2><center>Detailed Description</center></h2>
+                </div>
+                    <div class="modal-body">
+                            <div class="col-sm-8">
+                                <p> {{ obj.videoInfo.snippet.localized.description }} </p>
+                            </div>              
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-lg pull-left" data-dismiss="modal">Cancel</button>
+                    </div>
             
-                        {% endfor %}
-                        {%endif%}
+
+            </div>
+         </div>
+       </div>
+
+            {% if loop.index0 % 4 == 3 %}
+            <!--Use this to break line-->
+            <div class="clearfix"></div>
+            </div>
+            {% endif %}
+       {% endfor %}
+       {% endif %}
+
+
+            <div class="col-md-3">
+              <div class="grid1">
+               <div class="view view-first">
+                  <div class="index_img2"><img src="../static/web/images/pic2.jpg" class="img-responsive" alt=""/></div>
+                    <div class="mask">
+                        <div class="info"><i class="search"> </i> Show More</div>
+                        <ul class="mask_img">
+                           <li class="star"><img src="../static/web/images/star.png" alt=""/></li>
+                           <li class="set"><img src="../static/web/images/set.png" alt=""/></li>
+                           <div class="clearfix"> </div>
+                        </ul>
+                      </div>
+                  </div> 
+                 <i class="home2"> </i>
+                <div class="inner_wrap">
+                  <h3>2 bedroom house for rent in Dubai</h3>
+                  <ul class="star1">
+                    <h4 class="blue">Vision Agency</h4>
+                    <li><a href="#"> <img src="../static/web/images/star2.png" alt="">(136)</a></li>
+                  </ul>
+                </div>
+               </div>
+            </div>
+
+            <div class="clearfix"></div>
+            </div>
+           </div>
+           <div class="offering">
+              <h2>What can YoYoTube offer you ?</h2>
+              <h3>Brief summary of features in the project:</h3>
+              <ul class="icons wow fadeInUp" data-wow-delay="0.4s">
+                <li><i class="icon1"> </i><span class="one"> </span></li>
+                <li><i class="icon2"> </i><span class="two"> </span></li>
+                <li><i class="icon3"> </i><span class="three"> </span></li>
+                <li><i class="icon4"> </i><span class="four"> </span></li>
+                <li><i class="icon5"> </i></li>
+              </ul>
+              <div class="real">
+               <h4>Reality</h4>
+               <div class="col-sm-6">
+                 <ul class="service_grid">
+                     <i class="s1"> </i>
+                      <li class="desc1 wow fadeInRight" data-wow-delay="0.4s">
+                        <p>Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum</p>
+                      </li>
+                      <div class="clearfix"> </div>
                      </ul>
-                  </div></td>
-                  <td bgcolor="#eee" width="75%" height="600">
-                       {% if videoid %}
-                        <img src= {{videoid.videoInfo.snippet.thumbnails.high.url}} style="width:1200px;height:600px;">
-                        {%endif%}
-                        
-                  </td>
-            </tr>
-         </table>
-   </div> 
+                   </div>
+                   <div class="col-sm-6">
+                 <ul class="service_grid">
+                     <i class="s2"> </i>
+                      <li class="desc1 wow fadeInRight" data-wow-delay="0.4s">
+                        <p>Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum</p>
+                      </li>
+                      <div class="clearfix"> </div>
+                     </ul>
+                   </div>
+                   <div class="clearfix"> </div>
+                   </div>
+              </div>
+           </div>
+        </div>
 
 
-  </body>
-</html>
+
+
+   <div class="footer">
+   	<div class="container">
+
+<!--    	 <div class="footer_top">
+   	   <h3>Subscribe to our newsletter</h3>
+   	   <form>
+		<span>
+			<i><img src="images/mail.png" alt=""></i>
+		    <input type="text" value="Enter your email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Enter your email';}">
+		    <label class="btn1 btn2 btn-2 btn-2g"> <input name="submit" type="submit" id="submit" value="Subscribe"> </label>
+		    <div class="clearfix"> </div>
+		</span>			 	    
+	   </form>
+	  </div> -->
+
+	  <div class="footer_grids">
+	     <div class="footer-grid">
+			<h4>Made by:</h4>
+			<ul class="list1">
+				<li><a href="https://www.facebook.com/rajan.garg.14">Rajan Garg</a></li>
+				<li><a href="https://www.facebook.com/Rajshekhar1332">Raj Shekhar</a></li>
+				<li><a href="https://www.facebook.com/RiiitviiikRAWat">Ritvik Rawat</a></li>
+				<li><a href="#">Chinangshuk Roy</a></li>
+			</ul>
+		  </div>
+		  
+		  <div class="footer-grid last_grid">
+			<h4>Follow Us</h4>
+			<ul class="footer_social wow fadeInLeft" data-wow-delay="0.4s">
+			  <li><a href=""> <i class="fb"> </i> </a></li>
+			  <li><a href=""><i class="tw"> </i> </a></li>
+			  <li><a href=""><i class="google"> </i> </a></li>
+			  <li><a href=""><i class="u_tube"> </i> </a></li>
+		 	</ul>
+		 	
+		  </div>
+		  <div class="clearfix"> </div>
+	   </div>
+      </div>
+   </div>
+</body>
+</html>		
