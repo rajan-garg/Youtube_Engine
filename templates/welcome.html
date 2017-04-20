@@ -118,19 +118,31 @@
        <!--The top menu above videos-->
       <div class="content_top">
           <div class="container">
-              <div class="col-md-6 bottom_nav">
+              <div class="col-md-6 bottom_nav" style="padding-right: 5px">
                 <div class="content_menu">
                   <ul>
-                    <li class="active"><a href="/trend">Trending</a></li> 
-                    <li class="active"><a href="/fav">Favourite</a></li> 
-                    <li class="active"><a href="/clicks">History</a></li> 
+                  <h4>
+                    
+                    <li class="active"><a href="/trend"><i class="fa fa-fire" aria-hidden="true" style="color: black"></i> Trending</a></li> 
+                    <li class="active"><a href="/fav"><i class="fa fa-gratipay" aria-hidden="true" style="color: black"></i>
+ Favourite</a></li> 
+                    <li class="active"><a href="/clicks"><i class="fa fa-history" aria-hidden="true" style="color: black"></i>
+ History</a></li>
+                    <li class="active"><a href="/sports"><i class="fa fa-futbol-o" aria-hidden="true" style="color: black"></i>
+ Sports</a></li> 
+                    <li class="active"><a href="/news"><i class="fa fa-newspaper-o" aria-hidden="true" style="color: black"></i>
+ News</a></li> 
+                    
+                  </h4> 
                   </ul>
                </div>
               </div>
               <div class="col-md-6 bottom_nav">
                 <div class="content_menu">
                   <ul>
-                    <li class="active"><a href="#"><b>Showing results for {{answer}} : </b></a></li> 
+                  <h3>
+                    <li class="active"><a href="#">Showing results for: <b><i> {{answer}} </i> </b></a></li>
+                    </h3> 
                   </ul>
                 </div>
               </div>
@@ -139,20 +151,42 @@
 
 
 <!--Start editing here-->
+{% if videoid %}
 <div class="content_middle">
-        <div class="container">
-          <div class="content_middle_box">
-          <div class="top_grid">
-         {% if videoid %}
+  <div class="container">
+    <div class="content_middle_box">
+      <div class="top_grid">   
          <iframe width="1150" height="600"
                   src="https://www.youtube.com/embed/{{videoid.videoInfo.id}}">
          </iframe> 
-         <!-- <img src= {{videoid.videoInfo.snippet.thumbnails.high.url}} style="width:1200px;height:600px;"> -->
-         {%endif%}
-         </div>
-         </div>
-         </div>
-         </div>
+      </div>
+      <div class="inner_wrap">
+          <h2><b> {{ videoid.videoInfo.snippet.title }} </b></h2>
+          <h2>
+            <ul class="star1" id="menu">
+                    <h4 class="blue"> Uploaded on : {{ videoid.videoInfo.snippet.publishedAt }} </h4>
+                    <li>
+                    <i class="fa fa-thumbs-up" aria-hidden="true"></i>: {{ videoid.videoInfo.statistics.likeCount }} 
+                     </li>
+                    <li>
+                  <i class="fa fa-thumbs-down" aria-hidden="true"></i>: {{ videoid.videoInfo.statistics.dislikeCount }} 
+                    </li>
+                    <li>
+                       <i class="fa fa-comment" aria-hidden="true"></i>: {{ videoid.videoInfo.statistics.commentCount }}
+                    </li>
+                    <li>
+                     <i class="fa fa-eye" aria-hidden="true"></i>: {{ videoid.videoInfo.statistics.viewCount }}
+                    </li>
+                    <li>
+                     <i class="fa fa-star" aria-hidden="true"></i>: {{ videoid.videoInfo.statistics.favoriteCount }}
+                    </li>
+                  </ul>
+          </h2>
+      </div>    
+    </div>
+  </div>
+</div>
+{%endif%}
 
 <!--Middle portion-->
 
@@ -213,7 +247,7 @@
                     <h2><center>Detailed Description</center></h2>
                 </div>
                     <div class="modal-body">
-                            <div class="col-sm-8">
+                            <div class="col-sm-12">
                                 <p> {{ obj.videoInfo.snippet.localized.description }} </p>
                             </div>              
                     </div>
@@ -235,7 +269,7 @@
        {% endif %}
 
 
-            <div class="col-md-3">
+            <!-- <div class="col-md-3">
               <div class="grid1">
                <div class="view view-first">
                   <div class="index_img2"><img src="../static/web/images/pic2.jpg" class="img-responsive" alt=""/></div>
@@ -257,7 +291,7 @@
                   </ul>
                 </div>
                </div>
-            </div>
+            </div> -->
 
             <div class="clearfix"></div>
             </div>

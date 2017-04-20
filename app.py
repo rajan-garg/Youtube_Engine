@@ -73,7 +73,7 @@ def edits2(word):
 def video(vidID):
 	star = mongo.db.mycol
 	a = star.find_one({'videoInfo.id':vidID})
-	b=graph.run("match(n:Youtube)-[r]-(n2) where n.name= {n} return n2 order by r.weight desc limit 10",n = vidID)
+	b=graph.run("match(n:Youtube)-[r: `SUGGEST`]-(n2) where n.name= {n} return n2 order by r.weight desc limit 10",n = vidID)
 	out=[]
 	global acc
 	if acc!='':
@@ -144,7 +144,7 @@ def fav():
 	return Response("Please login")
 
 @app.route('/trend')
-def rec():
+def trend():
 	global acc
 	star = mongo.db.mycol
 	a = star.find().sort("videoInfo.statistics.viewCount",-1).limit(11)
@@ -153,6 +153,25 @@ def rec():
 	else:
 		return render_template('welcome.html',username=acc,name = a)
 
+@app.route('/sports')
+def sport():
+	global acc
+	star = mongo.db.mycol
+	a = star.find( { '$text': { '$search': "sports" } }, { 'score': {'$meta': "textScore"}}).sort([('score',{'$meta':'textScore'})]).limit(11)
+	if acc=='':
+		return render_template('index.html',name = a)
+	else:
+		return render_template('welcome.html',username=acc,name = a)
+
+@app.route('/news')
+def news():
+	global acc
+	star = mongo.db.mycol
+	a = star.find( { '$text': { '$search': "news" } }, { 'score': {'$meta': "textScore"}}).sort([('score',{'$meta':'textScore'})]).limit(11)
+	if acc=='':
+		return render_template('index.html',name = a)
+	else:
+		return render_template('welcome.html',username=acc,name = a)
 
 @app.route('/success/<query>')
 def success(query):
