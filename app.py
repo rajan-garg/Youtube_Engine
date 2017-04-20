@@ -6,9 +6,11 @@ import MySQLdb
 from flask_pymongo import PyMongo
 import json
 from py2neo import Graph, authenticate
+from py2neo import Node, Relationship
 
 import re
 from collections import Counter
+
 
 app = Flask(__name__)
 
@@ -73,9 +75,15 @@ def edits2(word):
 def video(vidID):
 	star = mongo.db.mycol
 	a = star.find_one({'videoInfo.id':vidID})
+	x = a['videoInfo']['statistics']['viewCount'] + 1
+	star.update({'videoInfo.id':vidID},{'$set': {'videoInfo.statistics.viewCount':x}},upsert=False)
+	a = star.find_one({'videoInfo.id':vidID})
 	b=graph.run("match(n:Youtube)-[r: `SUGGEST`]-(n2) where n.name= {n} return n2 order by r.weight desc limit 10",n = vidID)
 	out=[]
-	global acc
+	if session['video'] == "abc":
+		session['video'] = a['videoInfo']['id']
+	else:
+		graph.run("match (n)-[r:`SUGGEST`]-(p) where n.name={n1} and p.name={n2} set r.weight = r.weight+1 return r.weight",n1=session['video'],n2=vidID)
 	if acc!='':
 		cursor = mysql.connect().cursor()
 		cursor.execute('SELECT * FROM vids WHERE user="' + acc + '" AND videoid="' + vidID + '";')
@@ -110,12 +118,13 @@ def video(vidID):
 
 @app.route('/clicks')
 def clicks():
+	session['video'] = "abc"
 	global acc
 	print acc
 	if acc!='':
 		print "yoloyool"
 		cursor = mysql.connect().cursor()
-		cursor.execute('SELECT * FROM vids WHERE user="' + acc + '" ORDER BY time DESC;')
+		cursor.execute('SELECT * FROM vids WHERE user="' + acc + '" ORDER BY time DESC LIMIT 12;')
 		data = cursor.fetchall()
 		print data[0][1]
 		out=[]
@@ -128,12 +137,13 @@ def clicks():
 
 @app.route('/fav')
 def fav():
+	session['video'] = "abc"
 	global acc
 	print acc
 	if acc!='':
 		print "yoloyool"
 		cursor = mysql.connect().cursor()
-		cursor.execute('SELECT * FROM vids WHERE user="' + acc + '" AND count>=2 ORDER BY count DESC;')
+		cursor.execute('SELECT * FROM vids WHERE user="' + acc + '" AND count>=2 ORDER BY count DESC LIMIT 12;')
 		data = cursor.fetchall()
 		print data[0][1]
 		out=[]
@@ -145,9 +155,10 @@ def fav():
 
 @app.route('/trend')
 def trend():
+	session['video'] = "abc"
 	global acc
 	star = mongo.db.mycol
-	a = star.find().sort("videoInfo.statistics.viewCount",-1).limit(11)
+	a = star.find().sort("videoInfo.statistics.viewCount",-1).limit(12)
 	if acc=='':
 		return render_template('index.html',name = a)
 	else:
@@ -155,9 +166,10 @@ def trend():
 
 @app.route('/sports')
 def sport():
+	session['video'] = "abc"
 	global acc
 	star = mongo.db.mycol
-	a = star.find( { '$text': { '$search': "sports" } }, { 'score': {'$meta': "textScore"}}).sort([('score',{'$meta':'textScore'})]).limit(11)
+	a = star.find( { '$text': { '$search': "sports" } }, { 'score': {'$meta': "textScore"}}).sort([('score',{'$meta':'textScore'})]).limit(12)
 	if acc=='':
 		return render_template('index.html',name = a)
 	else:
@@ -165,9 +177,10 @@ def sport():
 
 @app.route('/news')
 def news():
+	session['video'] = "abc"
 	global acc
 	star = mongo.db.mycol
-	a = star.find( { '$text': { '$search': "news" } }, { 'score': {'$meta': "textScore"}}).sort([('score',{'$meta':'textScore'})]).limit(11)
+	a = star.find( { '$text': { '$search': "news" } }, { 'score': {'$meta': "textScore"}}).sort([('score',{'$meta':'textScore'})]).limit(12)
 	if acc=='':
 		return render_template('index.html',name = a)
 	else:
@@ -175,11 +188,12 @@ def news():
 
 @app.route('/success/<query>')
 def success(query):
+	session['video'] = "abc"
 	global acc
 	print acc
 	print query
 	star = mongo.db.mycol
-	a = star.find( { '$text': { '$search': query } }, { 'score': {'$meta': "textScore"}}).sort([('score',{'$meta':'textScore'})]).limit(11)
+	a = star.find( { '$text': { '$search': query } }, { 'score': {'$meta': "textScore"}}).sort([('score',{'$meta':'textScore'})]).limit(12)
 	b=[]
 	count = 0
 	for yolo in a:
@@ -204,6 +218,7 @@ def success(query):
 
 @app.route('/search',methods = ['POST', 'GET'])
 def search():
+	session['video'] = "abc"
 	user="hello"
 	if request.method=="POST":
 		user = request.form['nm']
@@ -216,7 +231,7 @@ def search():
 
 @app.route('/home')
 def home():
-	
+	session['video'] = "abc"
 	if 'username' in session:
 		global acc
 		username = session['username']
@@ -228,6 +243,7 @@ def home():
 
 @app.route('/welcome')
 def welcome():
+	session['video'] = "abc"
 	global acc
 	#return acc
 	return  render_template('welcome.html',username=acc)
@@ -235,6 +251,7 @@ def welcome():
 
 @app.route('/auth', methods=['GET', 'POST'])
 def auth():
+	session['video'] = "abc"
 	if request.method == 'POST':
 		u = request.form['username']
 		p = request.form['password']
@@ -254,6 +271,7 @@ def auth():
 
 @app.route('/register', methods=['GET', 'POST'])
 def reg():
+	session['video'] = "abc"
 	if request.method == 'POST':
 		u = request.form['username']
 		p = request.form['password']
@@ -277,6 +295,7 @@ def reg():
 
 @app.route('/logout')
 def logout():
+	session['video'] = "abc"
 	global acc
 	acc= ''
 
@@ -286,4 +305,4 @@ def logout():
 
 if __name__ == '__main__':
 	app.secret_key = 'qwerty'
-	app.run(debug=True)
+	app.run(host='0.0.0.0', port=8080,debug=True)
