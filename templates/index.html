@@ -52,7 +52,7 @@
 <div class="header">
 		   <div class="col-sm-8 header-left">
 					 <div class="logo">
-						<a href="index.html"><img src="../static/web/images/logo.png" alt=""/></a>
+						<a href="/home"><img src="../static/web/images/logo.png" alt=""/></a>
 					 </div>
 
             <h2 style="color:#E94E38">
@@ -141,15 +141,25 @@
          </div>
     </div>
       
-      <div class="col-md-6 bottom_nav">
-            <div class="content_menu">
-            <ul>
-               <li class="active"><a href="#"><b>The results are : </b></a></li> 
-               
-            </ul>
-         </div>
+      <!--The top menu above videos-->
+      <div class="content_top">
+          <div class="container">
+              <div class="col-md-6 bottom_nav">
+                <div class="content_menu">
+                  <ul>
+                    <li class="active"><a href="/trend">Trending</a></li> 
+                  </ul>
+               </div>
+              </div>
+              <div class="col-md-6 bottom_nav">
+                <div class="content_menu">
+                  <ul>
+                    <li class="active"><a href="#"><b>The results are : </b></a></li> 
+                  </ul>
+                </div>
+              </div>
+          </div>  
       </div>
-      
 
 <!--Start editing here-->
 <div class="content_middle">
@@ -157,7 +167,10 @@
           <div class="content_middle_box">
           <div class="top_grid">
          {% if videoid %}
-         <img src= {{videoid.videoInfo.snippet.thumbnails.high.url}} style="width:1200px;height:600px;">
+          <iframe width="1150" height="600"
+                  src="https://www.youtube.com/embed/{{videoid.videoInfo.id}}">
+         </iframe> 
+         <!-- <img src= {{videoid.videoInfo.snippet.thumbnails.high.url}} style="width:1200px;height:600px;"> -->
          {%endif%}
          </div>
          </div>
@@ -176,7 +189,7 @@
                <div class="col-md-3" >
                <div class="grid1">
                   <div class="view view-first">
-                  <div class="index_img2"><img src= {{obj.videoInfo.snippet.thumbnails.default.url}} class="img-responsive" alt=""  style="width:260px;height:180px;" /></div>
+                  <div class="index_img2"><img src= {{obj.videoInfo.snippet.thumbnails.high.url}} class="img-responsive" alt=""  style="width:260px;height:180px;" /></div>
                     <div class="mask">
                         <div class="info"><i class="search"> </i>
                            <a href="#" data-toggle="modal" data-target="#desc"> Show More</a>

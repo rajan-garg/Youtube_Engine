@@ -41,8 +41,6 @@ def video(vidID):
 		data = cursor.fetchone()
 		conn=MySQLdb.connect(host="localhost", user="root", passwd="ronalpha", db="youtube")
 		cursor=conn.cursor()
-		# query1 = 'SELECT * FROM vids WHERE user=="' + acc + '" AND videoid=="' +vidID + '"'
-		# data = cursor.execute(query1)
 		print data
 		print "Yolo"
 		if data:
@@ -76,7 +74,7 @@ def clicks():
 	if acc!='':
 		print "yoloyool"
 		cursor = mysql.connect().cursor()
-		cursor.execute('SELECT * FROM vids WHERE user="' + acc + '";')
+		cursor.execute('SELECT * FROM vids WHERE user="' + acc + '" ORDER BY time DESC;')
 		data = cursor.fetchall()
 		print data[0][1]
 		out=[]
@@ -86,13 +84,42 @@ def clicks():
 		return render_template('welcome.html',username=acc,name=out)
 	return Response("Please login")
 
+
+@app.route('/fav')
+def fav():
+	global acc
+	print acc
+	if acc!='':
+		print "yoloyool"
+		cursor = mysql.connect().cursor()
+		cursor.execute('SELECT * FROM vids WHERE user="' + acc + '" AND count>=2 ORDER BY count DESC;')
+		data = cursor.fetchall()
+		print data[0][1]
+		out=[]
+		star = mongo.db.mycol
+		for i in data:
+			out.append(star.find_one({'videoInfo.id':i[1]}))
+		return render_template('welcome.html',username=acc,name=out)
+	return Response("Please login")
+
+@app.route('/trend')
+def rec():
+	global acc
+	star = mongo.db.mycol
+	a = star.find().sort("videoInfo.statistics.viewCount",-1).limit(11)
+	if acc=='':
+		return render_template('index.html',name = a)
+	else:
+		return render_template('welcome.html',username=acc,name = a)
+
+
 @app.route('/success/<query>')
 def success(query):
 	global acc
 	print acc
 	print query
 	star = mongo.db.mycol
-	a = star.find( { '$text': { '$search': query } }, { 'score': {'$meta': "textScore"}}).limit(10)
+	a = star.find( { '$text': { '$search': query } }, { 'score': {'$meta': "textScore"}}).sort([('score',{'$meta':'textScore'})]).limit(11)
 	if acc=='':
 		return render_template('index.html',name = a)
 	else:
